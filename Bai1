@@ -1,0 +1,123 @@
+import tkinter as tk
+from tkinter import ttk, messagebox
+import platform
+
+class CalculatorApp:
+    def __init__(self, man_hinh):
+        self.man_hinh = man_hinh
+        self.cua_so_chinh_title()
+        self.khoi_tao_ung_dung()
+
+    def cua_so_chinh_title(self):
+        self.man_hinh.title("Chương trình Tính Toán")
+
+    def khoi_tao_ung_dung(self):
+        self.lich_su = []
+        self.tao_menu()
+        self.tao_tabs()
+
+    def tao_menu(self):
+        menubar = tk.Menu(self.man_hinh)
+        
+        menu_he_thong = tk.Menu(menubar, tearoff=0)
+        menu_he_thong.add_command(label="Click Here", command=self.thoat_ung_dung)
+        menubar.add_cascade(label="Quit", menu=menu_he_thong)
+
+        menu_tro_giup = tk.Menu(menubar, tearoff=0)
+        menu_tro_giup.add_command(label="About", command=self.hien_thi_huong_dan)
+        menubar.add_cascade(label="Help", menu=menu_tro_giup)
+
+        self.man_hinh.config(menu=menubar)
+
+    def tao_tabs(self):
+        tab_control = ttk.Notebook(self.man_hinh)
+
+        self.tab_tinh_toan = ttk.Frame(tab_control)
+        tab_control.add(self.tab_tinh_toan, text='Tính Toán')
+
+        self.tab_lich_su = ttk.Frame(tab_control)
+        tab_control.add(self.tab_lich_su, text='Lịch Sử')
+
+        tab_control.grid(row=0, column=0, padx=10, pady=10)
+
+        self.tao_giao_dien_tinh_toan()
+        self.tao_giao_dien_lich_su()
+
+    def tao_giao_dien_tinh_toan(self):
+        ttk.Label(self.tab_tinh_toan, text="Số thứ nhất:").grid(row=0, column=0, padx=5, pady=5, sticky="w")
+        self.so_1 = ttk.Entry(self.tab_tinh_toan)
+        self.so_1.grid(row=0, column=1, padx=5, pady=5)
+
+        ttk.Label(self.tab_tinh_toan, text="Số thứ hai:").grid(row=1, column=0, padx=5, pady=5, sticky="w")
+        self.so_2 = ttk.Entry(self.tab_tinh_toan)
+        self.so_2.grid(row=1, column=1, padx=5, pady=5)
+
+        ttk.Label(self.tab_tinh_toan, text="Phép tính:").grid(row=2, column=0, padx=5, pady=5, sticky="w")
+        self.phep_tinh = ttk.Combobox(self.tab_tinh_toan, values=["+", "-", "*", "/"])
+        self.phep_tinh.grid(row=2, column=1, padx=5, pady=5)
+
+        ttk.Button(self.tab_tinh_toan, text="Tính Toán", command=self.tinh_toan).grid(row=3, column=0, padx=5, pady=5)
+        ttk.Button(self.tab_tinh_toan, text="Xóa", command=self.xoa).grid(row=3, column=1, padx=5, pady=5)
+
+        self.result_label = ttk.Label(self.tab_tinh_toan, text="Kết quả:")
+        self.result_label.grid(row=4, column=0, columnspan=2, padx=5, pady=5)
+
+    def tao_giao_dien_lich_su(self):
+        self.lich_su_text = tk.Text(self.tab_lich_su, height=10, width=40)
+        self.lich_su_text.grid(row=0, column=0, padx=10, pady=10)
+
+        ttk.Button(self.tab_lich_su, text="Thoát", command=self.thoat_ung_dung).grid(row=1, column=0, padx=5, pady=5)
+
+    def tinh_toan(self):
+        try:
+            num1 = float(self.so_1.get().replace(',', '.'))
+            num2 = float(self.so_2.get().replace(',', '.'))
+            phep_tinh = self.phep_tinh.get()
+
+            ket_qua = self.thuc_hien_phep_tinh(num1, num2, phep_tinh)
+            self.result_label.config(text=f"Kết quả: {ket_qua}")
+
+            self.ghi_vao_lich_su(num1, num2, phep_tinh, ket_qua)
+
+        except ValueError:
+            self.result_label.config(text="Lỗi: Vui lòng nhập số hợp lệ")
+
+    def thuc_hien_phep_tinh(self, num1, num2, phep_tinh):
+        try:
+            if phep_tinh == '/' and num2 == 0:
+                return "Lỗi: Không thể chia cho 0"
+            if phep_tinh == '+':
+                return num1 + num2
+            elif phep_tinh == '-':
+                return num1 - num2
+            elif phep_tinh == '*':
+                return num1 * num2
+            elif phep_tinh == '/':
+                return num1 / num2
+            else:
+                return "Lỗi: Chọn phép tính hợp lệ!"
+        except Exception as e:
+            return f"Lỗi: {e}"
+
+    def xoa(self):
+        self.so_1.delete(0, tk.END)
+        self.so_2.delete(0, tk.END)
+        self.phep_tinh.set("")
+        self.result_label.config(text="Kết quả:")
+
+    def ghi_vao_lich_su(self, num1, num2, phep_tinh, ket_qua):
+        lich_su_moi = f"{num1} {phep_tinh} {num2} = {ket_qua}\n"
+        self.lich_su_text.insert(tk.END, lich_su_moi)
+        self.lich_su.append(lich_su_moi)
+
+    def hien_thi_huong_dan(self):
+        messagebox.showinfo("About", "Chương trình này bởi Lý Tuấn Đức.\nMSSV: 2274802010191.")
+
+    def thoat_ung_dung(self):
+        if messagebox.askokcancel("Thoát", "Bạn có chắc muốn thoát không?"):
+            self.man_hinh.quit()
+
+if __name__ == "__main__":
+    chay_chuong_trinh = tk.Tk()
+    app = CalculatorApp(chay_chuong_trinh)
+    chay_chuong_trinh.mainloop()
