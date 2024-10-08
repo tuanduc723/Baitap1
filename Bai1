@@ -44,15 +44,15 @@ class CalculatorApp:
         self.tao_giao_dien_lich_su()
 
     def tao_giao_dien_tinh_toan(self):
-        ttk.Label(self.tab_tinh_toan, text="Số thứ nhất:").grid(row=0, column=0, padx=5, pady=5, sticky="w")
+        ttk.Label(self.tab_tinh_toan, text="Số thứ nhất:").grid(row=0, column=0, padx=5, pady=5)
         self.so_1 = ttk.Entry(self.tab_tinh_toan)
         self.so_1.grid(row=0, column=1, padx=5, pady=5)
 
-        ttk.Label(self.tab_tinh_toan, text="Số thứ hai:").grid(row=1, column=0, padx=5, pady=5, sticky="w")
+        ttk.Label(self.tab_tinh_toan, text="Số thứ hai:").grid(row=1, column=0, padx=5, pady=5)
         self.so_2 = ttk.Entry(self.tab_tinh_toan)
         self.so_2.grid(row=1, column=1, padx=5, pady=5)
 
-        ttk.Label(self.tab_tinh_toan, text="Phép tính:").grid(row=2, column=0, padx=5, pady=5, sticky="w")
+        ttk.Label(self.tab_tinh_toan, text="Phép tính:").grid(row=2, column=0, padx=5, pady=5)
         self.phep_tinh = ttk.Combobox(self.tab_tinh_toan, values=["+", "-", "*", "/"])
         self.phep_tinh.grid(row=2, column=1, padx=5, pady=5)
 
