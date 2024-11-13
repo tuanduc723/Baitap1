@@ -3,19 +3,20 @@ from tkinter import ttk, messagebox
 import platform
 
 class CalculatorApp:
+    # tạo GUI
     def __init__(self, man_hinh):
         self.man_hinh = man_hinh
         self.cua_so_chinh_title()
         self.khoi_tao_ung_dung()
-
+    # tạo cửa sổ chính 
     def cua_so_chinh_title(self):
         self.man_hinh.title("Chương trình Tính Toán")
-
+    # tạo các chức năng
     def khoi_tao_ung_dung(self):
         self.lich_su = []
         self.tao_menu()
         self.tao_tabs()
-
+    # tạo Frame
     def tao_menu(self):
         menubar = tk.Menu(self.man_hinh)
         
@@ -28,7 +29,7 @@ class CalculatorApp:
         menubar.add_cascade(label="Help", menu=menu_tro_giup)
 
         self.man_hinh.config(menu=menubar)
-
+    # tạo từng Tab tính toán và Tab lịch sử
     def tao_tabs(self):
         tab_control = ttk.Notebook(self.man_hinh)
 
@@ -42,13 +43,13 @@ class CalculatorApp:
 
         self.tao_giao_dien_tinh_toan()
         self.tao_giao_dien_lich_su()
-
+    # tạo menu giao diện tính toán
     def tao_giao_dien_tinh_toan(self):
         ttk.Label(self.tab_tinh_toan, text="Số thứ nhất:").grid(row=0, column=0, padx=5, pady=5)
         self.so_1 = ttk.Entry(self.tab_tinh_toan)
         self.so_1.grid(row=0, column=1, padx=5, pady=5)
 
-        ttk.Label(self.tab_tinh_toan, text="Số thứ hai:").grid(row=1, column=0, padx=5, pady=5)
+        ttk.Label(self.tab_tinh_toan, text="Số thứ hai:").grid(row=1, column=0, padx=5, pady=5,)
         self.so_2 = ttk.Entry(self.tab_tinh_toan)
         self.so_2.grid(row=1, column=1, padx=5, pady=5)
 
@@ -61,13 +62,13 @@ class CalculatorApp:
 
         self.result_label = ttk.Label(self.tab_tinh_toan, text="Kết quả:")
         self.result_label.grid(row=4, column=0, columnspan=2, padx=5, pady=5)
-
+    # tạo menu giao diện lịch sử
     def tao_giao_dien_lich_su(self):
         self.lich_su_text = tk.Text(self.tab_lich_su, height=10, width=40)
         self.lich_su_text.grid(row=0, column=0, padx=10, pady=10)
 
         ttk.Button(self.tab_lich_su, text="Thoát", command=self.thoat_ung_dung).grid(row=1, column=0, padx=5, pady=5)
-
+    # thêm các chức năng tính toán 
     def tinh_toan(self):
         try:
             num1 = float(self.so_1.get().replace(',', '.'))
@@ -81,7 +82,7 @@ class CalculatorApp:
 
         except ValueError:
             self.result_label.config(text="Lỗi: Vui lòng nhập số hợp lệ")
-
+    # tạo combox cho các phép toán
     def thuc_hien_phep_tinh(self, num1, num2, phep_tinh):
         try:
             if phep_tinh == '/' and num2 == 0:
@@ -98,25 +99,25 @@ class CalculatorApp:
                 return "Lỗi: Chọn phép tính hợp lệ!"
         except Exception as e:
             return f"Lỗi: {e}"
-
+    # tạo chức năng xóa 
     def xoa(self):
         self.so_1.delete(0, tk.END)
         self.so_2.delete(0, tk.END)
         self.phep_tinh.set("")
         self.result_label.config(text="Kết quả:")
-
+    # tạo chức năng ghi nhận lịch sử tính toán vào khung lịch sử
     def ghi_vao_lich_su(self, num1, num2, phep_tinh, ket_qua):
         lich_su_moi = f"{num1} {phep_tinh} {num2} = {ket_qua}\n"
         self.lich_su_text.insert(tk.END, lich_su_moi)
         self.lich_su.append(lich_su_moi)
-
+    # thêm hiển thị hướng dẫn
     def hien_thi_huong_dan(self):
         messagebox.showinfo("About", "Chương trình này bởi Lý Tuấn Đức.\nMSSV: 2274802010191.")
-
+    # thoát ứng dụng
     def thoat_ung_dung(self):
         if messagebox.askokcancel("Thoát", "Bạn có chắc muốn thoát không?"):
             self.man_hinh.quit()
-
+# hàm main để chạy chương trình
 if __name__ == "__main__":
     chay_chuong_trinh = tk.Tk()
     app = CalculatorApp(chay_chuong_trinh)
